@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { akelab } from '../helpers/akelab';
+import { fibonacci } from '../../helpers/fibonacci';
 
-export const Akelab = () => {
+export const Fibonacci = () => {
   const [form, setForm] = useState({
-    akelab: '',
+    fibonacci: '',
   });
-  const [spanResultAkelab, setSpanResultAkelab] = useState('');
+  const [spanResult, setSpanResult] = useState('');
 
   const onChange = ({ target }) => {
     const { name, value } = target;
@@ -18,34 +18,34 @@ export const Akelab = () => {
   const onSubmit = async (ev) => {
     ev.preventDefault();
 
-    const { akelab } = form;
-    renderAkelab(akelab);
+    const { fibonacci } = form;
+    renderFibonacci(fibonacci);
     setForm({
       ...form,
-      akelab: '',
+      fibonacci: '',
     });
   };
 
   const todoOk = () => {
     const reg = /^\d+$/;
-    return form.akelab.length > 0 && reg.test(form.akelab) ? true : false;
+    return form.fibonacci.length > 0 && reg.test(form.fibonacci) ? true : false;
   };
 
-  const renderAkelab = (value) => {
-    setSpanResultAkelab(akelab(value));
+  const renderFibonacci = (value) => {
+    setSpanResult(fibonacci(value));
   };
 
   return (
     <div className='container-fibonacci'>
       <form onSubmit={onSubmit}>
-        <span>Secuencia Akelab</span>
+        <span>Secuencia Fibonacci</span>
         <div className='mt-3'>
           <input
             className='mb-3'
             type='text'
-            name='akelab'
+            name='fibonacci'
             placeholder='Ingrese un número'
-            value={form.akelab}
+            value={form.fibonacci}
             onChange={onChange}
           />
         </div>
@@ -57,7 +57,7 @@ export const Akelab = () => {
         </div>
       </form>
       <div className='container-results'>
-        <span>{spanResultAkelab}</span>
+        <span>{spanResult}</span>
       </div>
     </div>
   );

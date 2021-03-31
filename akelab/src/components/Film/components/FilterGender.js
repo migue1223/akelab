@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import filterIcon from '../images/Filter Icon.png';
+import filterIcon from '../../../images/Filter Icon.png';
 
-export const FilterGender = ({ onClick, genres }) => {
+export const FilterGender = ({ onFilterGenreClick, genres }) => {
   const [open, setOpen] = useState(false);
+  const [checkedItems, setCheckedItems] = useState({});
   const container = useRef(null);
 
   const handleClickOutside = (e) => {
@@ -17,6 +18,18 @@ export const FilterGender = ({ onClick, genres }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   });
+
+  const handleClickInputOutside = (e) => {
+    onFilterGenreClick(e);
+    setOpen(false);
+  };
+
+  const handleChangeChecked = ({ target: { name, checked } }) => {
+    setCheckedItems({
+      ...checkedItems,
+      [name]: checked,
+    });
+  };
 
   return (
     <div className='container-date' ref={container}>
@@ -34,11 +47,13 @@ export const FilterGender = ({ onClick, genres }) => {
               genres.map((genre) => (
                 <li className='dropdown-menu__item' key={genre.id}>
                   <input
-                    onClick={onClick}
+                    onClick={handleClickInputOutside}
                     id={genre.id}
                     name={genre.name}
                     type='checkbox'
                     value={genre.id}
+                    onChange={handleChangeChecked}
+                    checked={checkedItems[genre.name]}
                   />
                   <label htmlFor={genre.id}> {genre.name}</label>
                 </li>

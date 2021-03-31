@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import arrowIcon from '../images/Arrow Icon.png';
+import arrowIcon from '../../../images/Arrow Icon.png';
 
-export const FilterDate = ({ onClick }) => {
+export const FilterDate = ({ onFilterDateClick }) => {
   const [open, setOpen] = useState(false);
   const container = useRef(null);
 
@@ -9,6 +9,11 @@ export const FilterDate = ({ onClick }) => {
     if (container.current && !container.current.contains(e.target)) {
       setOpen(false);
     }
+  };
+
+  const handleClickInputOutside = (e) => {
+    onFilterDateClick(e);
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -35,19 +40,19 @@ export const FilterDate = ({ onClick }) => {
             <li>
               <strong>Fecha</strong>
             </li>
-            <li onClick={onClick} className='dropdown-menu__item'>
+            <li onClick={handleClickInputOutside} className='dropdown-menu__item'>
               Nuevas - Antiguas
             </li>
-            <li onClick={onClick} className='dropdown-menu__item'>
+            <li onClick={handleClickInputOutside} className='dropdown-menu__item'>
               Antiguas - Nuevas
             </li>
             <li>
               <strong>Calificación</strong>
             </li>
-            <li onClick={onClick} className='dropdown-menu__item'>
+            <li onClick={handleClickInputOutside} className='dropdown-menu__item'>
               0 - 10 puntos
             </li>
-            <li onClick={onClick} className='dropdown-menu__item'>
+            <li onClick={handleClickInputOutside} className='dropdown-menu__item'>
               10 - 0 puntos
             </li>
           </ul>

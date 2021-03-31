@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Movie } from './Movie';
-import { getFilms } from '../helpers/fetch';
-import { FilterDate } from './FilterDate';
-import { FilterGender } from './FilterGender';
-import { FilterSearch } from './FilterSearch';
-import { sortData } from '../helpers/sortData';
+import { Movie } from './components/Movie';
+import { getFilms } from '../../helpers/fetch';
+import { FilterDate } from './components/FilterDate';
+import { FilterGender } from './components/FilterGender';
+import { FilterSearch } from './components/FilterSearch';
+import { sortData } from '../../helpers/sortData';
+import { filterGender } from '../../helpers/filterGender';
 
 export const Film = () => {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
   const [date, setDate] = useState('');
-  const [gender, setGender] = useState([]);
+  const [gender, setGender] = useState({});
+  const [genderItems, setGenderItems] = useState([]);
   const [search, setSearch] = useState('');
   const [filteredMovies, setFilteredMovies] = useState([]);
 
@@ -36,22 +38,34 @@ export const Film = () => {
   }, [date, movies]);
 
   useEffect(() => {
-    setFilteredMovies(
-      movies.filter((movie) =>
-        movie.genre_ids.filter((ids) => gender.filter((g) => g === ids))
-      )
-    );
-  }, [gender, movies]);
+    const { id, checked } = gender;
+    if (checked) {
+      genderItems.push(+id);
+      setGenderItems(genderItems);
+    } else {
+      const index = genderItems.indexOf(+id);
+      genderItems.splice(index, 1);
+      setGenderItems(genderItems);
+    }
+
+    const filterMovies = filterGender(movies, genderItems);
+
+    filterMovies.length > 0
+      ? setFilteredMovies(filterMovies)
+      : setFilteredMovies(movies);
+  }, [genderItems, gender, movies]);
 
   return (
     <div>
       <div className='container-actions-movies'>
-        <FilterSearch onChange={(e) => setSearch(e.target.value)} />
+        <FilterSearch onSearchChange={(e) => setSearch(e.target.value)} />
         <FilterGender
           genres={genres}
-          onClick={(e) => setGender([+e.target.value, ...gender])}
+          onFilterGenreClick={(e) =>
+            setGender({ id: e.target.id, checked: e.target.checked })
+          }
         />
-        <FilterDate onClick={(e) => setDate(e.target.innerText)} />
+        <FilterDate onFilterDateClick={(e) => setDate(e.target.innerText)} />
       </div>
       <div className='container-movies'>
         {filteredMovies.length ? (
